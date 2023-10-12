@@ -5,6 +5,12 @@
 Welcome to our CSCI 4560/5560 Database project!
 
 
+## Dependencies
+
+* `sqlalchemy`
+* The official MySQL Python adapter
+
+
 ## Data Sources
 
 Data comes from IOWA Mesonet, specifically COOP and ASOS.
