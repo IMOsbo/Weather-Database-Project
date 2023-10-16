@@ -10,6 +10,13 @@ Welcome to our CSCI 4560/5560 Database project!
 * `sqlalchemy`
 * The official MySQL Python adapter
 * Download `coop.csv`, `asos.csv` and `asosMetadata.csv` as described below.
+* `Flask`
+
+Flask examples: 
+
+* <https://manojahi.medium.com/flask-html-template-with-mysql-2f3b9405d0e2>
+* <https://dev.mysql.com/doc/connector-python/en/connector-python-example-cursor-select.html>
+* <https://picocss.com/>
 
 ## Data Sources
 

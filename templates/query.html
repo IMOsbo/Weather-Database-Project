@@ -1,0 +1,35 @@
+<html>
+
+	<head>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+		<style>
+		html {
+			padding: 20px;
+		}
+		</style>
+	</head>
+	<body>
+		<!-- from https://picocss.com/docs/navs.html -->
+		<nav>
+		  <ul>
+		    <li><strong>Weather Database Project</strong></li>
+		  </ul>
+		  <ul>
+		    <li><a href="/">Query</a></li>
+		    <li><a href="#">Maps</a></li>
+		    <li><a href="#">About</a></li>
+		  </ul>
+		</nav>
+		<h1>Hello world!!</h1>
+		<p>Enter an elevation below.</p>
+		<form action="/query_elevation" method="post">
+		<label for="elevation">
+		      Elevation
+		      <input type="text" id="elevation" name="elevation" placeholder="123" required>
+		    </label>
+		<button type="submit">Submit</button>
+		</form>
+
+	</body>
+
+</html>
