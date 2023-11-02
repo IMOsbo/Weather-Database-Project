@@ -7,8 +7,10 @@ CREATE TABLE coopdata (
 	`low_F` FLOAT(53), 
 	precip TEXT, 
 	snow_inch TEXT, 
-	snowd_inch TEXT
-)
+	snowd_inch TEXT,
+    primary key(nwsli),
+    foreign key(nwsli) references coopmetadata(id)
+);
 
 
 CREATE TABLE coopmetadata (
@@ -20,22 +22,23 @@ CREATE TABLE coopmetadata (
 	`Archive Begins` TEXT, 
 	`Archive Ends` FLOAT(53), 
 	`IEM Network` TEXT, 
-	`Attributes` FLOAT(53)
-)
+	`Attributes` FLOAT(53),
+    primary key(nwsli)
+);
 
 
 CREATE TABLE asosdata (
 	station TEXT, 
-	valid TEXT, 
-	tmpf TEXT, 
-	dwpf TEXT, 
-	relh TEXT, 
-	drct TEXT, 
-	sknt TEXT, 
-	p01i TEXT, 
-	alti TEXT, 
+	valid DATETIME, 
+	tmpf FLOAT, 
+	dwpf FLOAT, 
+	relh FLOAT, 
+	drct FLOAT, 
+	sknt INT, 
+	p01i INT, 
+	alti FLOAT, 
 	mslp TEXT, 
-	vsby TEXT, 
+	vsby FLOAT, 
 	gust TEXT, 
 	skyc1 TEXT, 
 	skyc2 TEXT, 
@@ -52,10 +55,12 @@ CREATE TABLE asosdata (
 	peak_wind_gust TEXT, 
 	peak_wind_drct TEXT, 
 	peak_wind_time TEXT, 
-	feel TEXT, 
+	feel FLOAT, 
 	metar TEXT, 
-	snowdepth TEXT
-)
+	snowdepth TEXT,
+    primary key(station),
+    foreign key(station) references asosmetadata(station)
+);
 
 
 CREATE TABLE asosmetadata (
@@ -63,6 +68,7 @@ CREATE TABLE asosmetadata (
 	valid TEXT, 
 	lon FLOAT(53), 
 	lat FLOAT(53), 
-	elevation FLOAT(53)
-)
+	elevation FLOAT(53),
+    primary key(station)
+);
 
