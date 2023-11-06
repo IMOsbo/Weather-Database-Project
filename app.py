@@ -47,9 +47,9 @@ def showMapQuery():
     distance = float(request.form["distance"])
     # query = f"with testTable as (select nwsli, high_F as `temp`, Latitude1 as Latitude, Longitude1 as Longitude, (3959 * acos( cos( radians({latitude}) ) * cos( radians( Latitude1 ) ) * cos( radians({longitude}) - radians(Longitude1) ) + sin( radians({latitude}) ) * sin( radians(Latitude1) ) )) as distance from coopdata join coopmetadata on coopdata.nwsli = coopmetadata.ID where date='2023-10-01')  select * from testTable where distance < 50 and temp is not null;"
 
-    query = """with testTable as (select nwsli, high_F as `temp`, Latitude1 as Latitude, Longitude1 as Longitude,
-(3959 * acos( cos( radians(35.849) ) * cos( radians( Latitude1 ) ) * cos( radians(-86.368) - radians(Longitude1) ) + sin( radians(35.849) ) * sin( radians(Latitude1) ) )) as distance
-from coopdata join coopmetadata on coopdata.nwsli = coopmetadata.ID where date="2023-10-01")  select * from testTable where distance < 50 and temp is not null;"""
+    query = f"""with testTable as (select nwsli, high_F as `temp`, Latitude1 as Latitude, Longitude1 as Longitude,
+(3959 * acos( cos( radians({latitude}) ) * cos( radians( Latitude1 ) ) * cos( radians({longitude}) - radians(Longitude1) ) + sin( radians({latitude}) ) * sin( radians(Latitude1) ) )) as distance
+from coopdata join coopmetadata on coopdata.nwsli = coopmetadata.ID where date="2023-10-01")  select * from testTable where distance < {distance} and temp is not null;"""
 # cursor.execute(f"select id, `Elevation [m]` from coopmetadata where `Elevation [m]` > {elevation} order by `Elevation [m]`")
     mapcursor.execute(query)
     return render_template("map.html", results = mapcursor, centerLat = latitude, centerLong = longitude, radius = distance)
