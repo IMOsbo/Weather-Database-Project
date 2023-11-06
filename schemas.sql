@@ -8,7 +8,7 @@ CREATE TABLE coopdata (
 	precip TEXT, 
 	snow_inch TEXT, 
 	snowd_inch TEXT,
-    primary key(nwsli),
+    primary key(nwsli, date),
     foreign key(nwsli) references coopmetadata(id)
 );
 
@@ -23,7 +23,7 @@ CREATE TABLE coopmetadata (
 	`Archive Ends` FLOAT(53), 
 	`IEM Network` TEXT, 
 	`Attributes` FLOAT(53),
-    primary key(nwsli)
+    primary key(`ID`)
 );
 
 
@@ -58,7 +58,7 @@ CREATE TABLE asosdata (
 	feel FLOAT, 
 	metar TEXT, 
 	snowdepth TEXT,
-    primary key(station),
+    primary key(station, valid),
     foreign key(station) references asosmetadata(station)
 );
 
