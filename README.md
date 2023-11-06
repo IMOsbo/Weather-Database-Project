@@ -4,6 +4,17 @@
 
 Welcome to our CSCI 4560/5560 Database project!
 
+## TODO
+
+- Need to incorporate COOP and ASOS data together on `elevation query`
+
+
+## Queries and Stuff
+
+- Ability to query stations off of elevation ✅
+- Ability to query stations based on radius lat/long; return temperature as a map ⚠️
+- Ability to query for the closest station based on lat/long points and display "dashboard" view
+
 
 ## Dependencies
 
@@ -21,8 +32,6 @@ Flask examples:
 ## Data Sources
 
 Data comes from IOWA Mesonet, specifically COOP and ASOS.
-
-
 
 ### COOP Metadata
 

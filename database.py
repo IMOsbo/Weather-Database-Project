@@ -54,28 +54,28 @@ schemas = open("schemas.sql", "w")
 try:
     coopData.to_sql(name='coopdata', con=conn)
     print(f"Inserted {len(coopData)} rows of COOP data!")
-    schemas.write(pd.io.sql.get_schema(coopData, 'coopdata', con=conn))
+    # schemas.write(pd.io.sql.get_schema(coopData, 'coopdata', con=conn))
 except:
     print("Could not insert COOP data - maybe you've already done it?")
 
 try:
     coopMetadata[0].to_sql(name='coopmetadata', con=conn)
     print(f"Inserted {len(coopMetadata[0])} rows of COOP metadata!")
-    schemas.write(pd.io.sql.get_schema(coopMetadata[0], 'coopmetadata', con=conn))
+    # schemas.write(pd.io.sql.get_schema(coopMetadata[0], 'coopmetadata', con=conn))
 except:
     print("Could not insert COOP metadata - maybe you've already done it?")
 
 try:
     asosData.to_sql(name='asosdata', con=conn)
     print(f"Inserted {len(asosData)} rows of ASOS data!")
-    schemas.write(pd.io.sql.get_schema(asosData, 'asosdata', con=conn))
+    # schemas.write(pd.io.sql.get_schema(asosData, 'asosdata', con=conn))
 except:
     print("Could not insert ASOS data - maybe you've already done it?")
 
 try:
     asosMetadata.to_sql(name='asosmetadata', con=conn)
     print(f"Inserted {len(asosMetadata)} rows of ASOS metadata!")
-    schemas.write(pd.io.sql.get_schema(asosMetadata, 'asosmetadata', con=conn))
+    # schemas.write(pd.io.sql.get_schema(asosMetadata, 'asosmetadata', con=conn))
 except:
     print("Could not insert ASOS metadata - maybe you've already done it?")
 

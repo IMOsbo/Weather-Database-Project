@@ -1,0 +1,142 @@
+
+<html>
+
+	<head>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+		<style>
+		body {
+			padding: 20px;
+		}
+		.leaflet-container {
+			height: 400px;
+			max-width: 100%;
+			max-height: 100%;
+		}
+		</style>
+	</head>
+	<body>
+		<!-- from https://picocss.com/docs/navs.html -->
+		<nav>
+		  <ul>
+		    <li><strong>Weather Database Project</strong></li>
+		  </ul>
+		  <ul>
+		    <li><a href="/">Home</a></li>
+		    <li><a href="/mapQuery">Map Query</a></li>
+		    <li><a href="/stationQuery">Specific Station</a></li>
+		    <li><a href="/query">Metadata Search</a></li>
+		    <li><a href="/about">About</a></li>
+		  </ul>
+		</nav>
+
+<h1 id="weather-database-project">Weather Database Project</h1>
+<h1 id="section">🌦️🌤️💻</h1>
+<p>Welcome to our CSCI 4560/5560 Database project!</p>
+<h2 id="queries-and-stuff">Queries and Stuff</h2>
+<ul>
+<li>Ability to query stations off of elevation ✅</li>
+<li>Ability to query stations based on radius lat/long; return
+temperature as a map ⚠️</li>
+<li>Ability to query for the closest station based on lat/long points
+and display “dashboard” view</li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li><code>sqlalchemy</code></li>
+<li>The official MySQL Python adapter</li>
+<li>Download <code>coop.csv</code>, <code>asos.csv</code> and
+<code>asosMetadata.csv</code> as described below.</li>
+<li><code>Flask</code></li>
+</ul>
+<p>Flask examples:</p>
+<ul>
+<li><a
+href="https://manojahi.medium.com/flask-html-template-with-mysql-2f3b9405d0e2"
+class="uri">https://manojahi.medium.com/flask-html-template-with-mysql-2f3b9405d0e2</a></li>
+<li><a
+href="https://dev.mysql.com/doc/connector-python/en/connector-python-example-cursor-select.html"
+class="uri">https://dev.mysql.com/doc/connector-python/en/connector-python-example-cursor-select.html</a></li>
+<li><a href="https://picocss.com/"
+class="uri">https://picocss.com/</a></li>
+</ul>
+<h2 id="data-sources">Data Sources</h2>
+<p>Data comes from IOWA Mesonet, specifically COOP and ASOS.</p>
+<h3 id="coop-metadata">COOP Metadata</h3>
+<p><a
+href="https://mesonet.agron.iastate.edu/sites/networks.php?network=TN_COOP&amp;format=html&amp;nohtml=on"
+class="uri">https://mesonet.agron.iastate.edu/sites/networks.php?network=TN_COOP&amp;format=html&amp;nohtml=on</a></p>
+<p>It’s all HTML, so we should be able to use <code>pd.read_html</code>
+for this really well… <a
+href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_html.html"
+class="uri">https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_html.html</a></p>
+<p><a
+href="https://mesonet.agron.iastate.edu/request/coop/obs-dl.php?network=TN_COOP&amp;station%5B%5D=SMVT1&amp;station%5B%5D=ALMT1&amp;station%5B%5D=ALLT1&amp;station%5B%5D=ARMT1&amp;station%5B%5D=AHNT1&amp;station%5B%5D=BNCT1&amp;station%5B%5D=BFDT1&amp;station%5B%5D=BETT1&amp;station%5B%5D=COAT1&amp;station%5B%5D=BLVT1&amp;station%5B%5D=BRTT1&amp;station%5B%5D=BROT1&amp;station%5B%5D=CRTT1&amp;station%5B%5D=CENT1&amp;station%5B%5D=CTET1&amp;station%5B%5D=CHET1&amp;station%5B%5D=CHFT1&amp;station%5B%5D=CSTT1&amp;station%5B%5D=LYCT1&amp;station%5B%5D=CLKT1&amp;station%5B%5D=CKV&amp;station%5B%5D=CKRT1&amp;station%5B%5D=CLVT1&amp;station%5B%5D=CMBT1&amp;station%5B%5D=COOT1&amp;station%5B%5D=COVT1&amp;station%5B%5D=CROT1&amp;station%5B%5D=LWST1&amp;station%5B%5D=DAHT1&amp;station%5B%5D=BYDT1&amp;station%5B%5D=DAYT1&amp;station%5B%5D=DCTT1&amp;station%5B%5D=DCKT1&amp;station%5B%5D=DVRT1&amp;station%5B%5D=DCRT1&amp;station%5B%5D=DYBT1&amp;station%5B%5D=ELZT1&amp;station%5B%5D=ERWT1&amp;station%5B%5D=NTFT1&amp;station%5B%5D=JCKT1&amp;station%5B%5D=CRST1&amp;station%5B%5D=FBNT1&amp;station%5B%5D=FCFT1&amp;station%5B%5D=FAVT1&amp;station%5B%5D=FYVT1&amp;station%5B%5D=CELT1&amp;station%5B%5D=FRAT1&amp;station%5B%5D=GAIT1&amp;station%5B%5D=GBOT1&amp;station%5B%5D=GTNT1&amp;station%5B%5D=GTLT1&amp;station%5B%5D=MTLT1&amp;station%5B%5D=STMT1&amp;station%5B%5D=GVLT1&amp;station%5B%5D=GRJT1&amp;station%5B%5D=GEST1&amp;station%5B%5D=HART1&amp;station%5B%5D=HENT1&amp;station%5B%5D=HOHT1&amp;station%5B%5D=HTLT1&amp;station%5B%5D=THWT1&amp;station%5B%5D=BEMT1&amp;station%5B%5D=JAMT1&amp;station%5B%5D=JLTT1&amp;station%5B%5D=JHNT1&amp;station%5B%5D=KNGT1&amp;station%5B%5D=KGST1&amp;station%5B%5D=KINT1&amp;station%5B%5D=KNXT1&amp;station%5B%5D=MRX&amp;station%5B%5D=LAFT1&amp;station%5B%5D=LNCT1&amp;station%5B%5D=LAWT1&amp;station%5B%5D=LWNT1&amp;station%5B%5D=LBNT1&amp;station%5B%5D=LNNT1&amp;station%5B%5D=LENT1&amp;station%5B%5D=LEXT1&amp;station%5B%5D=LNDT1&amp;station%5B%5D=LBLT1&amp;station%5B%5D=MNCT1&amp;station%5B%5D=MAYT1&amp;station%5B%5D=MCMT1&amp;station%5B%5D=MEGT1&amp;station%5B%5D=ZOOT1&amp;station%5B%5D=MERT1&amp;station%5B%5D=MILT1&amp;station%5B%5D=MTET1&amp;station%5B%5D=MTYT1&amp;station%5B%5D=MGBT1&amp;station%5B%5D=MRIT1&amp;station%5B%5D=MOST1&amp;station%5B%5D=MTCT1&amp;station%5B%5D=MSLT1&amp;station%5B%5D=BRGT1&amp;station%5B%5D=MTPT1&amp;station%5B%5D=MURT1&amp;station%5B%5D=MSRT1&amp;station%5B%5D=RBNT1&amp;station%5B%5D=NEST1&amp;station%5B%5D=NPTT1&amp;station%5B%5D=OKRT1&amp;station%5B%5D=NSHT1&amp;station%5B%5D=OHIT1&amp;station%5B%5D=HRTT1&amp;station%5B%5D=ONET1&amp;station%5B%5D=DCCT1&amp;station%5B%5D=PART1&amp;station%5B%5D=PRST1&amp;station%5B%5D=PIKT1&amp;station%5B%5D=PKET1&amp;station%5B%5D=PRTT1&amp;station%5B%5D=PULT1&amp;station%5B%5D=LVNT1&amp;station%5B%5D=RIPT1&amp;station%5B%5D=RNMT1&amp;station%5B%5D=RKIT1&amp;station%5B%5D=RKWT1&amp;station%5B%5D=RGRT1&amp;station%5B%5D=KENT1&amp;station%5B%5D=SVNT1&amp;station%5B%5D=SELT1&amp;station%5B%5D=BSAT1&amp;station%5B%5D=SVRT1&amp;station%5B%5D=TZET1&amp;station%5B%5D=SWNT1&amp;station%5B%5D=SHBT1&amp;station%5B%5D=SMAT1&amp;station%5B%5D=SMIT1&amp;station%5B%5D=SRNT1&amp;station%5B%5D=SODT1&amp;station%5B%5D=SPAT1&amp;station%5B%5D=SPET1&amp;station%5B%5D=SPIT1&amp;station%5B%5D=SPRT1&amp;station%5B%5D=TELT1&amp;station%5B%5D=TDUT1&amp;station%5B%5D=TNRT1&amp;station%5B%5D=THOT1&amp;station%5B%5D=TNST1&amp;station%5B%5D=TNET1&amp;station%5B%5D=UNCT1&amp;station%5B%5D=MART1&amp;station%5B%5D=WPKT1&amp;station%5B%5D=WART1&amp;station%5B%5D=TULT1&amp;station%5B%5D=DRET1&amp;station%5B%5D=CVLT1&amp;station%5B%5D=SHLT1&amp;station%5B%5D=NORT1&amp;station%5B%5D=HUNT1&amp;station%5B%5D=WTRT1&amp;station%5B%5D=WAVT1&amp;station%5B%5D=WAYT1&amp;station%5B%5D=WHST1&amp;station%5B%5D=SEQT1&amp;station%5B%5D=SAMT1&amp;station%5B%5D=WCHT1&amp;station%5B%5D=WEBT1&amp;station%5B%5D=LKMT1&amp;station%5B%5D=CAMT1&amp;station%5B%5D=WOOT1&amp;year1=2023&amp;month1=1&amp;day1=1&amp;year2=2023&amp;month2=10&amp;day2=1&amp;what=download&amp;delim=comma">And
+the obligatory long URL for data…</a></p>
+<p>Thanks, Iowa… Download this and save it as
+<code>coopData.csv</code></p>
+<h3 id="asos-data">ASOS Data</h3>
+<p>To request 1 ASOS station:</p>
+<p><a
+href="https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=MBT&amp;data=all&amp;year1=2023&amp;month1=10&amp;day1=10&amp;year2=2023&amp;month2=10&amp;day2=10&amp;tz=Etc%2FUTC&amp;format=onlycomma&amp;latlon=yes&amp;elev=yes&amp;missing=M&amp;trace=T&amp;direct=no&amp;report_type=3&amp;report_type=4"
+class="uri">https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=MBT&amp;data=all&amp;year1=2023&amp;month1=10&amp;day1=10&amp;year2=2023&amp;month2=10&amp;day2=10&amp;tz=Etc%2FUTC&amp;format=onlycomma&amp;latlon=yes&amp;elev=yes&amp;missing=M&amp;trace=T&amp;direct=no&amp;report_type=3&amp;report_type=4</a></p>
+<p>Important notes here:</p>
+<ul>
+<li>Encodes missing data as “M”</li>
+<li>Trace data is “T” - maybe just get rid of it?</li>
+</ul>
+<p>Here’s the URL to <em>technically</em> pull them all:</p>
+<h3 id="asos-metadata">ASOS Metadata</h3>
+<p>So, our data for ASOS actually includes all of the metadata all
+ready, which is really nice…</p>
+<p><a
+href="https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=0A9&amp;station=1M5&amp;station=2A0&amp;station=2M2&amp;station=8A3&amp;station=BGF&amp;station=BNA&amp;station=CHA&amp;station=CKV&amp;station=CSV&amp;station=DKX&amp;station=DYR&amp;station=FYE&amp;station=FYM&amp;station=GCY&amp;station=GKT&amp;station=GZS&amp;station=HZD&amp;station=JAU&amp;station=JWN&amp;station=LUG&amp;station=M01&amp;station=M02&amp;station=M04&amp;station=M08&amp;station=M33&amp;station=M54&amp;station=M91&amp;station=MBT&amp;station=MEM&amp;station=MKL&amp;station=MMI&amp;station=MNV&amp;station=MOR&amp;station=MQY&amp;station=MRC&amp;station=NQA&amp;station=OQT&amp;station=PHT&amp;station=PVE&amp;station=RKW&amp;station=RNC&amp;station=RZR&amp;station=SCX&amp;station=SNH&amp;station=SRB&amp;station=SYI&amp;station=SZY&amp;station=THA&amp;station=TRI&amp;station=TYS&amp;station=UCY&amp;station=XNX&amp;data=all&amp;year1=2023&amp;month1=1&amp;day1=1&amp;year2=2023&amp;month2=10&amp;day2=1&amp;tz=Etc%2FUTC&amp;format=onlycomma&amp;latlon=no&amp;elev=no&amp;missing=M&amp;trace=T&amp;direct=no&amp;report_type=3&amp;report_type=4">Really
+looooong link for the data</a></p>
+<p><a
+href="https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=0A9&amp;station=1M5&amp;station=2A0&amp;station=2M2&amp;station=8A3&amp;station=BGF&amp;station=BNA&amp;station=CHA&amp;station=CKV&amp;station=CSV&amp;station=DKX&amp;station=DYR&amp;station=FYE&amp;station=FYM&amp;station=GCY&amp;station=GKT&amp;station=GZS&amp;station=HZD&amp;station=JAU&amp;station=JWN&amp;station=LUG&amp;station=M01&amp;station=M02&amp;station=M04&amp;station=M08&amp;station=M33&amp;station=M54&amp;station=M91&amp;station=MBT&amp;station=MEM&amp;station=MKL&amp;station=MMI&amp;station=MNV&amp;station=MOR&amp;station=MQY&amp;station=MRC&amp;station=NQA&amp;station=OQT&amp;station=PHT&amp;station=PVE&amp;station=RKW&amp;station=RNC&amp;station=RZR&amp;station=SCX&amp;station=SNH&amp;station=SRB&amp;station=SYI&amp;station=SZY&amp;station=THA&amp;station=TRI&amp;station=TYS&amp;station=UCY&amp;station=XNX&amp;data=wxcodes&amp;year1=2023&amp;month1=1&amp;day1=1&amp;year2=2023&amp;month2=1&amp;day2=1&amp;tz=Etc%2FUTC&amp;format=onlycomma&amp;latlon=yes&amp;elev=yes&amp;missing=M&amp;trace=T&amp;direct=no&amp;report_type=3&amp;report_type=4">And
+the link for the metadata</a></p>
+<p>Nobody’s got time for that… 🙄</p>
+<p>For these, be sure to download these 2 files first… (Python doesn’t
+like reading files that <em>big</em> over the internet…) Save them as
+<code>asos.csv</code> and <code>asosMetadata.csv</code>.</p>
+<p>Probably going to be <code>pd.read_csv</code> for this one <a
+href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html"
+class="uri">https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html</a></p>
+<h2 id="data-limits">Data Limits</h2>
+<p>Not sure what dates we want to use yet?</p>
+<ul>
+<li>I’m thinking something like Jan 1 2023 - September 31 2023?</li>
+<li>That’s enough data to be interesting, but not so much to be
+troublesome…</li>
+</ul>
+<h2 id="what-about-sql">What about SQL?</h2>
+<p>I mean, this is a class about SQL after all…</p>
+<p>So, it turns out Pandas can generate your schemas for you:</p>
+<p><a href="https://stackoverflow.com/a/31075679"
+class="uri">https://stackoverflow.com/a/31075679</a></p>
+<p>Yay! This gets us our actual schemas with <del>little</del> no work
+on our part :)</p>
+<p>Once we get our data, we can insert it into our tables too.</p>
+<ul>
+<li><a href="https://docs.sqlalchemy.org/en/20/core/engines.html"
+class="uri">https://docs.sqlalchemy.org/en/20/core/engines.html</a></li>
+<li><a
+href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_sql.html"
+class="uri">https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_sql.html</a></li>
+</ul>
+<h2 id="thank-you-iowa-state">Thank you, Iowa State!</h2>
+<pre><code>Oopsy, something failed on our end, but fear not.
+Please contact akrherz@iastate.edu and reference this unique identifier: X6D3Q2VNQSP8
+Or wait a day for daryl to review the web logs and fix the bugs he wrote.  What a life.</code></pre>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>Annoying ASCII art: <a
+href="https://doodlenerd.com/web-tool/figlet-generator"
+class="uri">https://doodlenerd.com/web-tool/figlet-generator</a></li>
+</ul>
+
+	</body>
+
+</html>
