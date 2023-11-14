@@ -13,6 +13,10 @@ Welcome to our CSCI 4560/5560 Database project!
 - And... the whole dashboard view thing
 
 
+## Screenshots!
+
+<img src="dashboard.png">
+
 ## Queries and Stuff
 
 - Ability to query stations off of elevation ✅
