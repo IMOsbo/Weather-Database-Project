@@ -4,6 +4,12 @@
 
 Welcome to our CSCI 4560/5560 Database project!
 
+## Um... how do I run this?
+
+- Need to create an database called `weather`
+- Then update the crendentials in `database.py`
+- You _should_ then be able to run `database.py` and get a final result
+
 ## TODO
 
 - Need to incorporate COOP and ASOS data together on `elevation query` -> probably going to use `UNION ALL`
