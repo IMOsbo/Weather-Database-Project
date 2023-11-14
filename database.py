@@ -41,16 +41,21 @@ coopMetadata = pd.read_html("https://mesonet.agron.iastate.edu/sites/networks.ph
 convertDataTypes(coopMetadata[0])
 
 # read our asos data
-asosData = pd.read_csv("asos.csv")
+asosData = pd.read_csv("filteredasosdata.csv")
 convertDataTypes(asosData)
+
+asosData["time"] = asosData["valid"].str.slice(11,13)
+asosData["valid"] = asosData["valid"].str.slice(0,11)
+asosData = asosData[asosData["time"] == "12"]
+asosData = asosData.drop_duplicates(subset=["station", "valid"])
 
 # read our metadata
 asosMetadata = pd.read_csv("asosMetadata.csv").drop("wxcodes", axis=1)
 convertDataTypes(asosMetadata)
-
+asosMetadata = asosMetadata.drop_duplicates(subset=["station"])
 # open the schemas file
-schemas = open("schemas.sql", "w")
-
+# schemas = open("schemas.sql", "w")
+#
 try:
     coopData.to_sql(name='coopdata', con=conn)
     print(f"Inserted {len(coopData)} rows of COOP data!")
@@ -69,8 +74,8 @@ try:
     asosData.to_sql(name='asosdata', con=conn)
     print(f"Inserted {len(asosData)} rows of ASOS data!")
     # schemas.write(pd.io.sql.get_schema(asosData, 'asosdata', con=conn))
-except:
-    print("Could not insert ASOS data - maybe you've already done it?")
+except Exception as e:
+    print(e, "Could not insert ASOS data - maybe you've already done it?")
 
 try:
     asosMetadata.to_sql(name='asosmetadata', con=conn)
@@ -79,4 +84,4 @@ try:
 except:
     print("Could not insert ASOS metadata - maybe you've already done it?")
 
-schemas.close()
+# schemas.close()

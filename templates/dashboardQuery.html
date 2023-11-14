@@ -1,0 +1,129 @@
+<html>
+
+	<head>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+		<style>
+		html {
+			padding: 20px;
+			height: 100%;
+
+		}
+		.leaflet-container {
+			height: 400px;
+			max-width: 100%;
+			max-height: 100%;
+		}
+		#chart-row {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			height: 500px;
+		}
+
+		</style>
+	</head>
+	<body>
+		<!-- from https://picocss.com/docs/navs.html -->
+		<nav>
+		  <ul>
+		    <li><strong>Weather Database Project</strong></li>
+		  </ul>
+		  <ul>
+		    <li><a href="/">Home</a></li>
+		    <li><a href="/mapQuery">Map Query</a></li>
+		    <li><a href="/stationQuery">Specific Station</a></li>
+		    <li><a href="/query">Metadata Search</a></li>
+		    <li><a href="/about">About</a></li>
+		  </ul>
+		</nav>
+		<h1>Station {{results["station"][0]}} - ({{results["lat"][0]}}, {{results["lon"][0]}}) </h1>
+		<p><em>Data available from {{results["valid"][0]}} to {{results["valid"].iloc[-1]}}</em></p>
+		<h2>Station Information</h2>
+		<table role="grid">
+			<tr>
+				<td>Station Name</td><td>{{results["station"][0]}}</td>
+			</tr>
+			<tr>
+				<td>Latitude</td><td>{{results["lat"][0]}}</td>
+			</tr>
+			<tr>
+				<td>Longitude</td><td>{{results["lon"][0]}}</td>
+			</tr>
+			<tr>
+				<td>Elevation (feet)</td><td>{{results["elevation"][0]}}</td>
+			</tr>
+		</table>
+		<h2>Station Location</h2>
+		<div id="map" style="height: 400px;"></div>
+		<script>
+
+			const map = L.map('map').setView([35.963523, -86.545907], 7);
+
+			const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				maxZoom: 19,
+				attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+			}).addTo(map);
+			 marker = new L.marker([{{ results["lat"][0] }}, {{ results["lon"][0] }}]).addTo(map)
+				.bindPopup("<center>Station: {{ results['station'][0] }}</center>");
+		</script>
+		<hr>
+		<div id="chart-row">
+			<h2>Temperature (F) Trend</h2>
+			<div>
+			  <canvas id="tempChart" class="chart"></canvas>
+			</div>
+			<hr>
+			<h2>Relative Humidity (%) Trend</h2>
+			<div>
+				  <canvas id="rhChart" class="chart"></canvas>
+				</div>
+			</div>
+			<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+			<script>
+			  const temperature = document.getElementById('tempChart');
+			  const relativeHumidity = document.getElementById('rhChart');
+
+			  new Chart(temperature, {
+			    type: 'line',
+			    data: {
+				    labels: {{ results.index.to_list() }},
+				    datasets: [{
+					label: 'Temperature',
+					data: {{ results["tmpf"].to_list() }},
+					borderWidth: 1
+				    }]
+			    },
+			    options: {
+				      scales: {
+					y: {
+					  beginAtZero: true
+					}
+				      }
+			    }
+			  });
+			  new Chart(relativeHumidity, {
+			    type: 'line',
+			    data: {
+			    labels: {{ results.index.to_list() }},
+			      datasets: [{
+				label: 'Relative Humidity',
+				      data: {{ results["relh"].astype("float64").to_list()}},
+				borderWidth: 1, 
+				borderColor: "red",
+
+			      }]
+			    },
+			    options: {
+			      scales: {
+				y: {
+				  beginAtZero: true
+				}
+			      }
+			    }
+			  });
+			</script>
+		</body>
+
+</html>

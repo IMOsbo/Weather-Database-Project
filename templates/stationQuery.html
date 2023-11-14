@@ -23,9 +23,9 @@
 		    <li><a href="/about">About</a></li>
 		  </ul>
 		</nav>
-		<h1>Map Query</h1>
+		<h1>Closest Station Data</h1>
 		<p>Enter an elevation below.</p>
-		<form action="/map_query" method="post">
+		<form action="/station_query" method="post">
 			<label for="latitude">
 			      Latitude 
 			      <input type="text" id="latitude" name="latitude" placeholder="123" required>
@@ -33,10 +33,6 @@
 			<label for="longitude">
 			      Longitude 
 			      <input type="text" id="longitude" name="longitude" placeholder="123" required>
-			</label>
-			<label for="distance">
-			      Distance 
-			      <input type="text" id="distance" name="distance" placeholder="123" required>
 			</label>
 		<button type="submit">Submit</button>
 		</form>

@@ -47,9 +47,9 @@
 			circle = new L.circle([{{centerLat}},{{centerLong}}], {radius: {{radius * 1609.344}}, color: "#535353", weight: 1}).addTo(map); 
 			littleCircle = new L.circle([{{centerLat}},{{centerLong}}], {radius: 3200, color: "red", weight: 1}).addTo(map); 
 
-			{% for stationId in results %}
-			 marker = new L.marker([{{ stationId[2] }}, {{stationId[3]}}]).addTo(map)
-				.bindPopup("<center>Station: {{stationId[0]}}<br>Temperature:{{stationId[1]}}</center>");
+			{% for row in results.iterrows() %}
+			 marker = new L.marker([{{ row[1]["Latitude"] }}, {{ row[1]["Longitude"] }}]).addTo(map)
+				.bindPopup("<center>Station: {{row[1]['nwsli']}}<br>Temperature:{{row[1]['temp']}}</center>");
 			{% endfor %}
 		</script>
 	</body>
