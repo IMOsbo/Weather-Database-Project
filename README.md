@@ -6,7 +6,11 @@ Welcome to our CSCI 4560/5560 Database project!
 
 ## TODO
 
-- Need to incorporate COOP and ASOS data together on `elevation query`
+- Need to incorporate COOP and ASOS data together on `elevation query` -> probably going to use `UNION ALL`
+- Want to be able to incorporate more weather variables on the `elevation query` page -> just need to add some logic in the SQL query
+- Add some sort of table display to the map -> Probably using <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html>
+- Let's add a page that just displays all of the available columns in each of the tables
+- And... the whole dashboard view thing
 
 
 ## Queries and Stuff
