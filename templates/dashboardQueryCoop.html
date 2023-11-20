@@ -1,3 +1,4 @@
+
 <html>
 
 	<head>
@@ -39,7 +40,7 @@
 		  </ul>
 		</nav>
 		<h1>Station {{results["station"][0]}} - ({{results["lat"][0]}}, {{results["lon"][0]}}) </h1>
-		<p><em>Data available from {{results["valid"][0]}} to {{results["valid"].iloc[-1]}}</em></p>
+		<p><em>Data available from {{results["date"][0]}} to {{results["date"].iloc[-1]}}</em></p>
 		<h2>Station Information</h2>
 		<table role="grid">
 			<tr>
@@ -61,7 +62,7 @@
 		<h2>Station Location</h2>
 		<div id="map" style="height: 400px;"></div>
 		<script>
-
+			
 			const map = L.map('map').setView([35.963523, -86.545907], 7);
 
 			const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -72,48 +73,45 @@
 				.bindPopup("<center>Station: {{ results['station'][0] }}</center>");
 		</script>
 		<hr>
-		<hr>
 			<details><summary>Click to see all observations.</summary>
 			<table role="grid">
 				<tr>
 					<th>Date</th>
-					<th>Temperature (F)</th>
-					<th>Relative Humidity</th>
-					<th>Wind Speed</th>
+					<th>Low Temperature (F)</th>
+					<th>High Temperature (F)</th>
 				</tr>
 				 <!-- https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.iterrows.html -->
 				{% for stationId in results.itertuples() %}
-					<tr><td>{{ stationId["valid"] }}</td>
-					<td>{{ stationId["tmpf"] }}</td>
-					<td>{{ stationId["relh"] }}</td>
-					<td>{{ stationId["sped"] }}</td></tr>
+					<tr><td>{{ stationId["date"] }}</td>
+						<td>{{ stationId["low_F"] }}</td>
+					<td>{{ stationId["high_F"] }}</td></tr>
 				{% endfor %}
 			</table>
 		</details>
 		<hr>
 		<div id="chart-row">
-			<h2>Temperature (F) Trend</h2>
+			<h2>High Temperature (F) Trend</h2>
 			<div>
-			  <canvas id="tempChart" class="chart"></canvas>
+			  <canvas id="highChart" class="chart"></canvas>
 			</div>
 			<hr>
-			<h2>Relative Humidity (%) Trend</h2>
+			<h2>Low Temperature (F) Trend</h2>
 			<div>
-				  <canvas id="rhChart" class="chart"></canvas>
+				  <canvas id="lowChart" class="chart"></canvas>
 				</div>
 			</div>
 			<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 			<script>
-			  const temperature = document.getElementById('tempChart');
-			  const relativeHumidity = document.getElementById('rhChart');
-
-			  new Chart(temperature, {
+			  const lowTemperature = document.getElementById('lowChart');
+			  const highTemperature = document.getElementById('highChart');
+			  const nan = 0;
+			  new Chart(highTemperature, {
 			    type: 'line',
 			    data: {
 				    labels: {{ results.index.to_list() }},
 				    datasets: [{
-					label: 'Temperature',
-					data: {{ results["tmpf"].to_list() }},
+					label: 'High Temperature',
+					data: {{ results["high_F"].to_list() }},
 					borderWidth: 1
 				    }]
 			    },
@@ -125,13 +123,13 @@
 				      }
 			    }
 			  });
-			  new Chart(relativeHumidity, {
+			  new Chart(lowTemperature, {
 			    type: 'line',
 			    data: {
 			    labels: {{ results.index.to_list() }},
 			      datasets: [{
-				label: 'Relative Humidity',
-				      data: {{ results["relh"].astype("float64").to_list()}},
+				label: 'Low Temperature',
+				      data: {{ results["low_F"].astype("float64").to_list()}},
 				borderWidth: 1, 
 				borderColor: "red",
 

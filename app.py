@@ -24,6 +24,14 @@ RETURNS float DETERMINISTIC
 RETURN (3959 * acos( cos( radians(startingLat) ) * cos( radians(latitude) ) * cos( radians(startingLong) - radians(longitude)) + sin(radians(startingLat) ) * sin(radians(latitude) )));
 """
 
+def closestStation(lat, lon):
+    return f"""
+    select * from 
+        ((select ID as Station, distance({lat}, {lon}, Latitude1, Longitude1) as Distance, "COOP" as Network from coopmetadata) 
+        union all (select Station, distance({lat}, {lon}, lat, lon) as Distance, "ASOS" as Network  from asosmetadata)) as metadata 
+    order by Distance limit 1;
+    """
+
 with pandas_conn.connect() as conn:
     conn.execute(text("DROP FUNCTION IF EXISTS distance"))
     conn.execute(text(distanceFunction))
@@ -50,6 +58,11 @@ def query():
 def stationQuery():
     return render_template("stationQuery.html")
 
+
+@app.route("/insert")
+def insert():
+    return render_template("insert.html")
+
 # this handles all of our query paths
 @app.route("/query_elevation", methods=["POST"])
 def showElevation():
@@ -62,38 +75,66 @@ def showElevation():
 def showDashboard():
     latitude = request.form["latitude"]
     longitude = request.form["longitude"]
-
-    query = f"""
-    select asosdata.valid, asosdata.station, tmpf, relh, sped, lat, lon, elevation from 
-    asosdata join asosmetadata on asosdata.station=asosmetadata.station 
-    where asosdata.station = (select station from (select min(station) as station, min(distance) 
-    from (select station, lat as Latitude, lon as Longitude, distance({latitude}, {longitude}, lat, lon) as distance 
-    from asosmetadata) as test) as thisisamess);
-    """
-
+    
     with pandas_conn.connect() as connection, connection.begin():  
-        data = pd.read_sql(query, connection)
-    return render_template("dashboardQuery.html", results = data)
+        network = pd.read_sql(closestStation(latitude, longitude), connection)
+    print(network)
+    if network["Network"][0] == "ASOS":
+        query = f"""
+        select asosdata.valid, asosdata.station, tmpf, relh, sped, lat, lon, elevation from 
+        asosdata join asosmetadata on asosdata.station=asosmetadata.station 
+        where asosdata.station = "{network["Station"][0]}"
+        """
+        with pandas_conn.connect() as connection, connection.begin():  
+            data = pd.read_sql(query, connection)
+
+        return render_template("dashboardQuery.html", results = data, network=network["Network"][0])
+    else:
+        query = f"""
+        select nwsli as station, high_F, low_F, `date`, Latitude1 as lat, Longitude1 as lon, `Elevation [m]` as elevation from coopdata join coopmetadata on coopdata.nwsli=coopmetadata.id where coopdata.nwsli="{network["Station"][0]}";
+        """
+
+        with pandas_conn.connect() as connection, connection.begin():  
+            data = pd.read_sql(query, connection)
+        return render_template("dashboardQueryCOOP.html", results = data, network=network["Network"][0])
 
 @app.route("/map_query", methods=["POST"])
 def showMapQuery():
     latitude = request.form["latitude"]
     longitude = request.form["longitude"]
     distance = float(request.form["distance"])
-
+    date = str(request.form["date"])
+    print(date)
     query = f"""
     with testTable as (select nwsli, high_F as `temp`, Latitude1 as Latitude, Longitude1 as Longitude,
     distance({latitude}, {longitude}, Latitude1, Longitude1) as distance
-    from coopdata join coopmetadata on coopdata.nwsli = coopmetadata.ID where date="2023-10-01")  
+    from coopdata join coopmetadata on coopdata.nwsli = coopmetadata.ID where date="{date}")  
     select * from testTable where distance < {distance} and temp is not null;
     """
-
+    print(query)
     with pandas_conn.connect() as connection, connection.begin():  
         data = pd.read_sql(query, connection)
-    return render_template("map.html", results = data, centerLat = latitude, centerLong = longitude, radius = distance)
+    return render_template("map.html", results = data, centerLat = latitude, centerLong = longitude, radius = distance, date=date)
 
-
-
+# @app.route("/insert_query", methods=["POST"])
+# def insertQuery():
+#     fileName = request.form["file"]
+#     network = request.form["network"]
+#     if network == "ASOS":
+#         asosData = pd.read_csv("filteredasosdata.csv")
+#         convertDataTypes(asosData)
+#
+#         asosData["time"] = asosData["valid"].str.slice(11,13)
+#         asosData["valid"] = asosData["valid"].str.slice(0,11)
+#         asosData = asosData[asosData["time"] == "12"]
+#         asosData = asosData.drop_duplicates(subset=["station", "valid"])
+#         try:
+#             asosData.to_sql(name='asosdata', con=conn, if_exists="append")
+#         except:
+#             result = "Could not add new ASOS data."
+#     else:
+#         coopData = pd.read_csv("coopData.csv")
+#         coopData.to_sql(name='coopdata', con=pandas_conn, if_exists="append")
 if __name__ == "__main__":
     app.run(debug=True)
 
