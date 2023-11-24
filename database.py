@@ -1,6 +1,6 @@
 # coding: utf-8
 import mysql.connector
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 import pandas as pd
 import warnings
 warnings.filterwarnings("ignore")
@@ -8,9 +8,9 @@ warnings.filterwarnings("ignore")
 
 # our datatypes get kinda weird with the csvs, so clean them up!
 def convertDataTypes(data):
-    data = data.replace("M", -500)
-    data = data.replace("T", 0.0001)
     for col in list(data):
+        data[col] = data[col].replace("M", -500)
+        data[col] = data[col].replace("T", 0.0001)
         try:
             data[col] = pd.to_numeric(data[col])
         except:
@@ -32,9 +32,13 @@ DATABASE = "weather"
 # create our database connection
 conn = create_engine(f"mysql+mysqlconnector://{USER}:{PW}@127.0.0.1/{DATABASE}")
 
+
 # read the coop data
 coopData = pd.read_csv("coopData.csv")
 convertDataTypes(coopData)
+# https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html
+coopData = coopData.dropna(subset=["high_F", "low_F", "time"])
+
 
 # read our Coop metadata
 coopMetadata = pd.read_html("https://mesonet.agron.iastate.edu/sites/networks.php?network=TN_COOP&format=html&nohtml=on")
@@ -44,8 +48,8 @@ convertDataTypes(coopMetadata[0])
 asosData = pd.read_csv("filteredasosdata.csv")
 convertDataTypes(asosData)
 
-asosData["time"] = asosData["valid"].str.slice(11,13)
-asosData["valid"] = asosData["valid"].str.slice(0,11)
+asosData["time"] = asosData["valid"].astype("str").str.slice(11,13)
+asosData["valid"] = asosData["valid"].astype("str").str.slice(0,11)
 asosData = asosData[asosData["time"] == "12"]
 asosData = asosData.drop_duplicates(subset=["station", "valid"])
 
@@ -53,9 +57,7 @@ asosData = asosData.drop_duplicates(subset=["station", "valid"])
 asosMetadata = pd.read_csv("asosMetadata.csv").drop("wxcodes", axis=1)
 convertDataTypes(asosMetadata)
 asosMetadata = asosMetadata.drop_duplicates(subset=["station"])
-# open the schemas file
-# schemas = open("schemas.sql", "w")
-#
+
 try:
     coopData.to_sql(name='coopdata', con=conn)
     print(f"Inserted {len(coopData)} rows of COOP data!")
@@ -84,4 +86,14 @@ try:
 except:
     print("Could not insert ASOS metadata - maybe you've already done it?")
 
-# schemas.close()
+with open("constraints.sql") as file, conn.connect() as con:
+    for line in file:
+        line = line.rstrip();
+        print(f"Applying constraint {line} ", end="")
+        try:
+            con.execute(text(line))
+            print("✅")
+        except:
+            print("❌")
+            print(e)
+
