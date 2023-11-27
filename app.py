@@ -25,12 +25,12 @@ RETURN (3959 * acos( cos( radians(startingLat) ) * cos( radians(latitude) ) * co
 """
 
 def closestStation(lat, lon):
-    return f"""
-    select * from 
-        ((select ID as Station, distance({lat}, {lon}, Latitude1, Longitude1) as Distance, "COOP" as Network from coopmetadata) 
-        union all (select Station, distance({lat}, {lon}, lat, lon) as Distance, "ASOS" as Network  from asosmetadata)) as metadata 
+    return text("""
+    select * from
+        ((select ID as Station, distance(:a, :o, Latitude1, Longitude1) as Distance, "COOP" as Network from coopmetadata)
+        union all (select Station, distance(:a, :o, lat, lon) as Distance, "ASOS" as Network  from asosmetadata)) as metadata
     order by Distance limit 1;
-    """
+    """)
 
 with pandas_conn.connect() as conn:
     conn.execute(text("DROP FUNCTION IF EXISTS distance"))
@@ -77,7 +77,7 @@ def showDashboard():
     longitude = request.form["longitude"]
     
     with pandas_conn.connect() as connection, connection.begin():  
-        network = pd.read_sql(closestStation(latitude, longitude), connection)
+        network = pd.read_sql(closestStation(latitude, longitude), connection, params={"a": latitude, "o": longitude})
     print(network)
     if network["Network"][0] == "ASOS":
         query = f"""
