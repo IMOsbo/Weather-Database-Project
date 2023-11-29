@@ -32,10 +32,10 @@ def closestStation(lat, lon):
     order by Distance limit 1;
     """)
 
-with pandas_conn.connect() as conn:
-    conn.execute(text("DROP FUNCTION IF EXISTS distance"))
-    conn.execute(text(distanceFunction))
-    conn.commit()
+with pandas_conn.connect() as distance:
+    distance.execute(text("DROP FUNCTION IF EXISTS distance"))
+    distance.execute(text(distanceFunction))
+    distance.commit()
 
 # this handles all of our pages
 @app.route("/")
@@ -68,7 +68,8 @@ def insert():
 def showElevation():
     cursor = conn.cursor()
     elevation = request.form["elevation"]
-    cursor.execute(f"select id, `Elevation [m]` from coopmetadata where `Elevation [m]` > {elevation} order by `Elevation [m]`")
+    # https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html
+    cursor.execute("""select id, `Elevation [m]` from coopmetadata where `Elevation [m]` > %(elevation)s order by `Elevation [m]`""", params={"elevation": elevation})
     return render_template("queryResult.html", results = cursor)
 
 @app.route("/station_query", methods=["POST"])
@@ -80,6 +81,8 @@ def showDashboard():
         network = pd.read_sql(closestStation(latitude, longitude), connection, params={"a": latitude, "o": longitude})
     print(network)
     if network["Network"][0] == "ASOS":
+        # these queries are relying on database values, so not 
+        # vulnerable to SQL injection (hypothetically)
         query = f"""
         select asosdata.valid, asosdata.station, tmpf, relh, sped, lat, lon, elevation from 
         asosdata join asosmetadata on asosdata.station=asosmetadata.station 
@@ -100,41 +103,25 @@ def showDashboard():
 
 @app.route("/map_query", methods=["POST"])
 def showMapQuery():
-    latitude = request.form["latitude"]
-    longitude = request.form["longitude"]
+    latitude = float(request.form["latitude"])
+    longitude = float(request.form["longitude"])
     distance = float(request.form["distance"])
-    date = str(request.form["date"])
+    date = str(request.form["date"]) + " 00:00:00"
+    print(latitude)
+    print(longitude)
+    print(distance)
     print(date)
-    query = f"""
+    query = text("""
     with testTable as (select nwsli, high_F as `temp`, Latitude1 as Latitude, Longitude1 as Longitude,
-    distance({latitude}, {longitude}, Latitude1, Longitude1) as distance
-    from coopdata join coopmetadata on coopdata.nwsli = coopmetadata.ID where date="{date}")  
-    select * from testTable where distance < {distance} and temp is not null;
-    """
+    distance(:a, :o, Latitude1, Longitude1) as distance
+    from coopdata join coopmetadata on coopdata.nwsli = coopmetadata.ID where date=:t)  
+    select * from testTable where distance < :d and temp is not null;
+    """)
     print(query)
     with pandas_conn.connect() as connection, connection.begin():  
-        data = pd.read_sql(query, connection)
+        data = pd.read_sql(query, connection, params={"a": latitude, "o": longitude, "t": date, "d": distance})
     return render_template("map.html", results = data, centerLat = latitude, centerLong = longitude, radius = distance, date=date)
 
-# @app.route("/insert_query", methods=["POST"])
-# def insertQuery():
-#     fileName = request.form["file"]
-#     network = request.form["network"]
-#     if network == "ASOS":
-#         asosData = pd.read_csv("filteredasosdata.csv")
-#         convertDataTypes(asosData)
-#
-#         asosData["time"] = asosData["valid"].str.slice(11,13)
-#         asosData["valid"] = asosData["valid"].str.slice(0,11)
-#         asosData = asosData[asosData["time"] == "12"]
-#         asosData = asosData.drop_duplicates(subset=["station", "valid"])
-#         try:
-#             asosData.to_sql(name='asosdata', con=conn, if_exists="append")
-#         except:
-#             result = "Could not add new ASOS data."
-#     else:
-#         coopData = pd.read_csv("coopData.csv")
-#         coopData.to_sql(name='coopdata', con=pandas_conn, if_exists="append")
 if __name__ == "__main__":
     app.run(debug=True)
 

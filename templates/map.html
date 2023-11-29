@@ -52,5 +52,28 @@
 				.bindPopup("<center>Station: {{row[1]['nwsli']}}<br>Temperature:{{row[1]['temp']}}</center>");
 			{% endfor %}
 		</script>
+		<br>
+		<hr>
+		<br>
+		<table role="grid">
+			<tr>
+				<th>Station Id</th>
+				<th>Temperature</th>
+				<th>Latitude</th>
+				<th>Longitude</th>
+				<th>Distance</th>
+			</tr>
+			{% for row in results.iterrows() %}
+			<tr>
+				<td>{{row[1]["nwsli"]}}</td>
+				<td>{{row[1]["temp"]}}</td>
+				<td>{{row[1]["Latitude"]}}</td>
+				<td>{{row[1]["Longitude"]}}</td>
+				<td>{{row[1]["distance"]}}</td>
+			</tr>
+			{% endfor %}
+	
+		</table>
+
 	</body>
 </html>
