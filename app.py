@@ -3,14 +3,15 @@ from sqlalchemy import create_engine, text
 import mysql.connector
 import pandas as pd
 
+with open("config.txt", "r") as file:
+    USER = file.readline().rstrip()
+    PW = file.readline().rstrip() 
+    DATABASE = file.readline().rstrip()
 
 app = Flask(__name__)
 
 conn = mysql.connector.connect(user='root', database='weather', password="1234")
 
-USER="root"
-DATABASE="weather"
-PW="1234"
 pandas_conn = create_engine(f"mysql+mysqlconnector://{USER}:{PW}@127.0.0.1/{DATABASE}")
 # Code heavily inspired by this:
 #     https://manojahi.medium.com/flask-html-template-with-mysql-2f3b9405d0e2

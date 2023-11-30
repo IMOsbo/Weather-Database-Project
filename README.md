@@ -7,8 +7,13 @@ Welcome to our CSCI 4560/5560 Database project!
 ## Um... how do I run this?
 
 - Need to create an database called `weather`
-- Then update the crendentials in `database.py`
+- Then update the crendentials in `config.txt`
 - You _should_ then be able to run `database.py` and get a final result
+
+## Data Download
+
+- You can download all of the processed data here: <https://mtmailmtsu-my.sharepoint.com/:f:/g/personal/imo2d_mtmail_mtsu_edu/EmpZ3SL8gpZJreuShq9Kbz0BrBJqdGDXYMxTSzaRa1fcWQ?e=h7k9qY>
+- Put the data all in the same directory as the other scripts and you should be good to go!!
 
 ## TODO
 
