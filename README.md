@@ -28,6 +28,9 @@ Welcome to our CSCI 4560/5560 Database project!
 
 <img src="dashboard.png">
 
+<img src="mapQuery.png">
+
+
 ## Queries and Stuff
 
 - Ability to query stations off of elevation ✅
