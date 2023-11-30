@@ -6,23 +6,13 @@ Welcome to our CSCI 4560/5560 Database project!
 
 ## Um... how do I run this?
 
-- Need to create an database called `weather`
-- Then update the crendentials in `config.txt`
+- Start by updating the crendentials in `config.txt`
 - You _should_ then be able to run `database.py` and get a final result
 
 ## Data Download
 
 - You can download all of the processed data here: <https://mtmailmtsu-my.sharepoint.com/:f:/g/personal/imo2d_mtmail_mtsu_edu/EmpZ3SL8gpZJreuShq9Kbz0BrBJqdGDXYMxTSzaRa1fcWQ?e=h7k9qY>
 - Put the data all in the same directory as the other scripts and you should be good to go!!
-
-## TODO
-
-- Need to incorporate COOP and ASOS data together on `elevation query` -> probably going to use `UNION ALL`
-- Want to be able to incorporate more weather variables on the `elevation query` page -> just need to add some logic in the SQL query
-- Add some sort of table display to the map -> Probably using <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html>
-- Let's add a page that just displays all of the available columns in each of the tables
-- And... the whole dashboard view thing
-
 
 ## Screenshots!
 
@@ -61,6 +51,14 @@ Flask examples:
 * <https://manojahi.medium.com/flask-html-template-with-mysql-2f3b9405d0e2>
 * <https://dev.mysql.com/doc/connector-python/en/connector-python-example-cursor-select.html>
 * <https://picocss.com/>
+
+
+
+## TODO
+
+* Need to incorporate COOP and ASOS data together on elevation query -> probably going to use `UNION ALL`
+* Want to be able to incorporate more weather variables on the elevation query page -> just need to add some logic in the SQL query
+* Let's add a page that just displays all of the available columns in each of the tables
 
 ## Data Sources
 
