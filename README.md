@@ -33,9 +33,9 @@ Welcome to our CSCI 4560/5560 Database project!
 
 ## Queries and Stuff
 
-- Ability to query stations off of elevation ✅
-- Ability to query stations based on radius lat/long; return temperature as a map ⚠️
-- Ability to query for the closest station based on lat/long points and display "dashboard" view
+- Ability to query stations off of elevation ⚠️
+- Ability to query stations based on radius lat/long; return temperature as a map ✅
+- Ability to query for the closest station based on lat/long points and display "dashboard" view ✅
 
 
 ## Dependencies
@@ -44,6 +44,17 @@ Welcome to our CSCI 4560/5560 Database project!
 * The official MySQL Python adapter
 * Download `coop.csv`, `asos.csv` and `asosMetadata.csv` as described below.
 * `Flask`
+* `pandas`
+
+## Installation
+
+* To install all of the dependencies for the project, run the following command:
+
+```
+$ pip install -r requirments.txt
+```
+
+* See <https://pip.pypa.io/en/stable/getting-started/#install-multiple-packages-using-a-requirements-file>
 
 Flask examples: 
 

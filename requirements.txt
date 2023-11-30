@@ -1,0 +1,4 @@
+mysql-connector-python==8.1.0
+SQLAlchemy==2.0.21
+pandas==2.1.1
+Flask==2.2.5
