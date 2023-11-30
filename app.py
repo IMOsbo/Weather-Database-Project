@@ -10,35 +10,35 @@ with open("config.txt", "r") as file:
 
 app = Flask(__name__)
 
-# conn = mysql.connector.connect(user='root', database='weather', password="1234")
+conn = mysql.connector.connect(user='root', database='weather', password="1234")
 
-# pandas_conn = create_engine(f"mysql+mysqlconnector://{USER}:{PW}@127.0.0.1/{DATABASE}")
-# # Code heavily inspired by this:
-# #     https://manojahi.medium.com/flask-html-template-with-mysql-2f3b9405d0e2
-# # Thank you!!
+pandas_conn = create_engine(f"mysql+mysqlconnector://{USER}:{PW}@127.0.0.1/{DATABASE}")
+# Code heavily inspired by this:
+#     https://manojahi.medium.com/flask-html-template-with-mysql-2f3b9405d0e2
+# Thank you!!
 
-# # https://dev.mysql.com/doc/refman/5.7/en/create-procedure.html
-# # https://learn.microsoft.com/en-us/sql/relational-databases/user-defined-functions/create-user-defined-functions-database-engine
-# distanceFunction = """
-# CREATE FUNCTION distance (startingLat float, startingLong float, latitude float, longitude float)
-# RETURNS float DETERMINISTIC
-# RETURN (3959 * acos( cos( radians(startingLat) ) * cos( radians(latitude) ) * cos( radians(startingLong) - radians(longitude)) + sin(radians(startingLat) ) * sin(radians(latitude) )));
-# """
+# https://dev.mysql.com/doc/refman/5.7/en/create-procedure.html
+# https://learn.microsoft.com/en-us/sql/relational-databases/user-defined-functions/create-user-defined-functions-database-engine
+distanceFunction = """
+CREATE FUNCTION distance (startingLat float, startingLong float, latitude float, longitude float)
+RETURNS float DETERMINISTIC
+RETURN (3959 * acos( cos( radians(startingLat) ) * cos( radians(latitude) ) * cos( radians(startingLong) - radians(longitude)) + sin(radians(startingLat) ) * sin(radians(latitude) )));
+"""
 
-# def closestStation(lat, lon):
-#     return text("""
-#     select * from
-#         ((select ID as Station, distance(:a, :o, Latitude1, Longitude1) as Distance, "COOP" as Network from coopmetadata)
-#         union all (select Station, distance(:a, :o, lat, lon) as Distance, "ASOS" as Network  from asosmetadata)) as metadata
-#     order by Distance limit 1;
-#     """)
+def closestStation(lat, lon):
+    return text("""
+    select * from
+        ((select ID as Station, distance(:a, :o, Latitude1, Longitude1) as Distance, "COOP" as Network from coopmetadata)
+        union all (select Station, distance(:a, :o, lat, lon) as Distance, "ASOS" as Network  from asosmetadata)) as metadata
+    order by Distance limit 1;
+    """)
 
-# with pandas_conn.connect() as distance:
-#     distance.execute(text("DROP FUNCTION IF EXISTS distance"))
-#     distance.execute(text(distanceFunction))
-#     distance.commit()
+with pandas_conn.connect() as distance:
+    distance.execute(text("DROP FUNCTION IF EXISTS distance"))
+    distance.execute(text(distanceFunction))
+    distance.commit()
 
-# this handles all of our pages
+this handles all of our pages
 @app.route("/")
 def home():
     return render_template("home.html")
