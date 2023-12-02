@@ -38,7 +38,7 @@ with pandas_conn.connect() as distance:
     distance.execute(text(distanceFunction))
     distance.commit()
 
-this handles all of our pages
+# this handles all of our pages
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -84,7 +84,8 @@ def showElevation():
     cursor = conn.cursor()
     elevation = request.form["elevation"]
     # https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html
-    cursor.execute("""select id, `Elevation [m]` from coopmetadata where `Elevation [m]` > %(elevation)s order by `Elevation [m]`""", params={"elevation": elevation})
+    # cursor.execute("""select id, `Elevation [m]` from coopmetadata where `Elevation [m]` > %(elevation)s order by `Elevation [m]`""", params={"elevation": elevation})
+    cursor.execute("""select * from ((select id as Station, `Elevation [m]` as Elevation, "COOP" as Network from coopmetadata) union all (select station as Station, elevation as Elevation, "ASOS" as Network from asosmetadata)) as t where Elevation > %(elevation)s order by Elevation""", params={"elevation": elevation})
     return render_template("queryResult.html", results = cursor)
 
 @app.route("/station_query", methods=["POST"])

@@ -1,9 +1,9 @@
 <html>
-
+	<!-- https://stackoverflow.com/questions/9679038/is-it-possible-to-perform-includes-with-flask -->
 	<head>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 		<style>
 		html {
 			padding: 20px;
@@ -25,7 +25,6 @@
 		</style>
 	</head>
 	<body>
-		<!-- from https://picocss.com/docs/navs.html -->
 		<nav>
 		  <ul>
 		    <li><strong>Weather Database Project</strong></li>
@@ -34,10 +33,13 @@
 		    <li><a href="/">Home</a></li>
 		    <li><a href="/mapQuery">Map Query</a></li>
 		    <li><a href="/stationQuery">Specific Station</a></li>
+			<li><a href="/coopcolumn">Data information for COOP</a></li>
+			<li><a href="/asoscolumn">Data information for ASOS</a></li>
 		    <li><a href="/query">Metadata Search</a></li>
 		    <li><a href="/about">About</a></li>
 		  </ul>
 		</nav>
+		<!-- from https://picocss.com/docs/navs.html -->
 		<h1>Station {{results["station"][0]}} - ({{results["lat"][0]}}, {{results["lon"][0]}}) </h1>
 		<p><em>Data available from {{results["valid"][0]}} to {{results["valid"].iloc[-1]}}</em></p>
 		<h2>Station Information</h2>
@@ -73,7 +75,7 @@
 		</script>
 		<hr>
 		<hr>
-			<details><summary>Click to see all observations.</summary>
+			<details><summary role="button">Click to see all observations.</summary>
 			<table role="grid">
 				<tr>
 					<th>Date</th>

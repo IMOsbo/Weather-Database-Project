@@ -20,6 +20,8 @@
 		    <li><a href="/mapQuery">Map Query</a></li>
 		    <li><a href="/stationQuery">Specific Station</a></li>
 		    <li><a href="/query">Metadata Search</a></li>
+			<li><a href="/coopcolumn">Data information for COOP</a></li>
+			<li><a href="/asoscolumn">Data information for ASOS</a></li>
 		    <li><a href="/about">About</a></li>
 		  </ul>
 		</nav>
@@ -28,10 +30,12 @@
 			<tr>
 				<td>Station Id</td>
 				<td>Elevation [m]</td>
+				<td>Network</td>
 			</tr>
 			{% for stationId in results %}
 				<tr><td>{{ stationId[0] }}</td>
-				<td>{{stationId[1] }}</td></tr>
+				<td>{{stationId[1] }}</td>
+				<td>{{stationId[2]}}</td></tr>
 			{% endfor %}
 		</table>
 

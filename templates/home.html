@@ -7,6 +7,19 @@
 		html {
 			padding: 20px;
 		}
+		.hero {
+		  background-color: #394046;
+		  background-image: url("/static/clouds.jpg");
+		  background-position: center;
+		  background-size: cover;
+		  height: 500px;
+		}
+		header hgroup {
+  margin-bottom: 3rem;
+}
+		header {
+  padding: 3rem 0;
+}
 		</style>
 	</head>
 	<body>
@@ -20,18 +33,45 @@
 		    <li><a href="/mapQuery">Map Query</a></li>
 		    <li><a href="/stationQuery">Specific Station</a></li>
 		    <li><a href="/query">Metadata Search</a></li>
-			<li><a href="/coopcolumn">Data information for COOP</a></li>
-			<li><a href="/asoscolumn">Data information for ASOS</a></li>
+		    <li role="list" dir="rtl">
+		      <a href="#" aria-haspopup="listbox">Data information</a>
+		      <ul role="listbox">
+			<li><a href="/coopcolumn">COOP</a></li>
+			<li><a href="asoscolumn">ASOS</a></li>
+		      </ul>
+		    </li>
 		    <li><a href="/about">About</a></li>
 		  </ul>
 		</nav>
-		<h1>Welcome to the Weather Database!</h1>
-		<p>Select an application below.</p>
+		<div class="hero" data-theme="dark">
+		      <header style="padding: 50px;">
+		      <!-- <header> -->
+			<hgroup>
+			  <h1>Welcome to the Weather Database!</h1>
+			  <em><h5>ISAIAH OSBORNE, JOHANNES MOOLMAN, PARKER DANIELS, & MD NAHID HASAN</h5></em>
+			</hgroup>
+		      </header>
+		    </div>
+		<!-- <h1>/h1> -->
+		<p>Two main networks, the ASOS and COOP networks, provide high quality weather observations from airport
+weather stations and volunteer NOAA-certified personal weather stations, respectively. While this data
+is important for analysis, the canonical source for historical data, the National Climate Data Center, is
+notoriously difficult to retrieve data from. </p>
 
-		
-		<a href="/mapQuery" role="button">Map Query</a>
-		<a href="/stationQuery" role="button">Specific Station</a>
-		<a href="/query" role="button">Metadata Search</a>
+		<blockquote>
+		We hope to fix this.
+		</blockquote>
+		</p>
+
+		<a href="/mapQuery"><button>Map Query</button></a>		
+		<a href="/stationQuery"><button>Specific Station</button></a>
+		<a href="/query"><button>Metadata Search</button></a>
+
+
+		<blockquote>All work was done as part of CSCI 4560/5560 at MTSU, Fall 2023.</blockquote>
+
+
+		<blockquote><a href="https://commons.wikimedia.org/wiki/File:Stormclouds.jpg">Image from Wikimedia CC 3.0</a></blockquote>
 	</body>
 
 </html>
