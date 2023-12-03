@@ -88,6 +88,62 @@ def showElevation():
     cursor.execute("""select * from ((select id as Station, `Elevation [m]` as Elevation, "COOP" as Network from coopmetadata) union all (select station as Station, elevation as Elevation, "ASOS" as Network from asosmetadata)) as t where Elevation > %(elevation)s order by Elevation""", params={"elevation": elevation})
     return render_template("queryResult.html", results = cursor)
 
+"""
+select * 
+from ((select id as Station, `Elevation [m]` as Elevation, "COOP" as Network
+        from coopmetadata) 
+union all (select station as Station, elevation as Elevation, "ASOS" as Network 
+            from asosmetadata)) as t 
+            where Elevation > %(elevation)s order by Elevation
+
+"""
+
+
+"""
+select * 
+from ((select id as Station, Longitude1 as Longitude, "COOP" as Network
+        from coopmetadata) 
+union all (select station as Station, lon as Longitude, "ASOS" as Network 
+            from asosmetadata)) as t 
+            where Longitude > %(longitude)s order by Longitude
+
+"""
+
+
+
+
+
+@app.route("/query_longitude", methods=["POST"])
+def showLongitude():
+    cursor = conn.cursor()
+    longitude = request.form["longitude"]
+    cursor.execute("""select * from ((select id as Station, Longitude1 as Longitude, "COOP" as Network from coopmetadata) union all (select station as Station, lon as Longitude, "ASOS" as Network from asosmetadata)) as t order by abs(Longitude - %(longitude)s)""", params={"longitude": longitude})
+    return render_template("longitudeQueryResult.html", results = cursor)
+
+
+@app.route("/query_latitude", methods=["POST"])
+def showLatitude():
+    cursor = conn.cursor(buffered=True)
+    latitude = request.form["latitude"]
+    cursor.execute("""select * from ((select id as Station, Latitude1 as Latitude, "COOP" as Network from coopmetadata) union all (select station as Station, lat as Latitude, "ASOS" as Network from asosmetadata)) as t order by abs(Latitude - %(latitude)s)""", params={"latitude": latitude})
+    return render_template("latitudeQueryResult.html", results = cursor)
+    
+
+
+@app.route("/query_distance", methods=["POST"])
+def showDistance():
+    cursor = conn.cursor(buffered=True)
+    latitude1 = request.form["latitude1"]
+    longitude1 = request.form["longitude1"]
+    try:
+        cursor.execute("""select * from ((select id as Station, Longitude1 as Longitude, Latitude1 as Latitude, "COOP" as Network, truncate(ST_Distance_Sphere(point(Longitude1, Latitude1),point(%(longitude1)s,%(latitude1)s))/1000,3) as Distance from coopmetadata) union all (select station as Station, lon as Longitude, lat as Latitude, "ASOS" as Network, truncate(ST_Distance_Sphere(point(lon, lat),point(%(longitude1)s,%(latitude1)s))/1000,3) as Distance from asosmetadata)) as t order by Distance""", params={"latitude1": latitude1, "longitude1" : longitude1})
+        return render_template("distanceQueryResult.html", results = cursor)
+    except Exception as e:
+        return("Please enter acceptable longitude and latitude values")
+    #return render_template("distanceQueryResult.html", results = cursor)
+
+
+
 @app.route("/station_query", methods=["POST"])
 def showDashboard():
     latitude = request.form["latitude"]

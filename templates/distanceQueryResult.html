@@ -1,0 +1,48 @@
+
+<html>
+
+	<head>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+		<style>
+		html {
+			padding: 20px;
+		}
+		</style>
+	</head>
+	<body>
+		<!-- from https://picocss.com/docs/navs.html -->
+		<nav>
+		  <ul>
+		    <li><strong>Weather Database Project</strong></li>
+		  </ul>
+		  <ul>
+		    <li><a href="/">Home</a></li>
+		    <li><a href="/mapQuery">Map Query</a></li>
+		    <li><a href="/stationQuery">Specific Station</a></li>
+		    <li><a href="/query">Metadata Search</a></li>
+			<li><a href="/coopcolumn">Data information for COOP</a></li>
+			<li><a href="/asoscolumn">Data information for ASOS</a></li>
+		    <li><a href="/about">About</a></li>
+		  </ul>
+		</nav>
+		<h1>Results</h1>
+		<table role="grid">
+			<tr>
+				<td>Station Id</td>
+				<td>Longitude</td>
+                <td>Latitude</td>
+				<td>Network</td>
+                <td>Distance(km)</td>
+			</tr>
+			{% for stationId in results %}
+				<tr><td>{{ stationId[0] }}</td>
+				<td>{{stationId[1] }}</td>
+				<td>{{stationId[2]}}</td>
+                <td>{{stationId[3]}}</td>
+                <td>{{stationId[4]}}</td></tr>
+			{% endfor %}
+		</table>
+
+	</body>
+
+</html>

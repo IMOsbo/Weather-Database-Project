@@ -105,7 +105,7 @@ with open("constraints.sql") as file, conn.connect() as con:
         try:
             con.execute(text(line))
             print("✅")
-        except:
+        except Exception as e:
             print("❌")
             print(e)
 
