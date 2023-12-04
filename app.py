@@ -85,32 +85,8 @@ def showElevation():
     elevation = request.form["elevation"]
     # https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html
     # cursor.execute("""select id, `Elevation [m]` from coopmetadata where `Elevation [m]` > %(elevation)s order by `Elevation [m]`""", params={"elevation": elevation})
-    cursor.execute("""select * from ((select id as Station, `Elevation [m]` as Elevation, "COOP" as Network from coopmetadata) union all (select station as Station, elevation as Elevation, "ASOS" as Network from asosmetadata)) as t where Elevation > %(elevation)s order by Elevation""", params={"elevation": elevation})
+    cursor.execute("""select * from ((select id as Station, `Elevation [m]` as Elevation, "COOP" as Network from coopmetadata) union all (select station as Station, elevation as Elevation, "ASOS" as Network from asosmetadata)) as t order by abs(Elevation - %(elevation)s)""", params={"elevation": elevation})
     return render_template("queryResult.html", results = cursor)
-
-"""
-select * 
-from ((select id as Station, `Elevation [m]` as Elevation, "COOP" as Network
-        from coopmetadata) 
-union all (select station as Station, elevation as Elevation, "ASOS" as Network 
-            from asosmetadata)) as t 
-            where Elevation > %(elevation)s order by Elevation
-
-"""
-
-
-"""
-select * 
-from ((select id as Station, Longitude1 as Longitude, "COOP" as Network
-        from coopmetadata) 
-union all (select station as Station, lon as Longitude, "ASOS" as Network 
-            from asosmetadata)) as t 
-            where Longitude > %(longitude)s order by Longitude
-
-"""
-
-
-
 
 
 @app.route("/query_longitude", methods=["POST"])
@@ -139,10 +115,8 @@ def showDistance():
         cursor.execute("""select * from ((select id as Station, Longitude1 as Longitude, Latitude1 as Latitude, "COOP" as Network, truncate(ST_Distance_Sphere(point(Longitude1, Latitude1),point(%(longitude1)s,%(latitude1)s))/1000,3) as Distance from coopmetadata) union all (select station as Station, lon as Longitude, lat as Latitude, "ASOS" as Network, truncate(ST_Distance_Sphere(point(lon, lat),point(%(longitude1)s,%(latitude1)s))/1000,3) as Distance from asosmetadata)) as t order by Distance""", params={"latitude1": latitude1, "longitude1" : longitude1})
         return render_template("distanceQueryResult.html", results = cursor)
     except Exception as e:
-        return("Please enter acceptable longitude and latitude values")
+        return("Please enter acceptable longitude and latitude values. Longitude may include values from -180 to 180, while latitude may include values from -90 to 90.")
     #return render_template("distanceQueryResult.html", results = cursor)
-
-
 
 @app.route("/station_query", methods=["POST"])
 def showDashboard():
