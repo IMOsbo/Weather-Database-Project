@@ -10,7 +10,7 @@ with open("config.txt", "r") as file:
 
 app = Flask(__name__)
 
-conn = mysql.connector.connect(user='root', database='weather', password="1234")
+conn = mysql.connector.connect(user=USER, database=DATABASE, password=PW)
 
 pandas_conn = create_engine(f"mysql+mysqlconnector://{USER}:{PW}@127.0.0.1/{DATABASE}")
 # Code heavily inspired by this:
