@@ -4,10 +4,13 @@
 
 Welcome to our CSCI 4560/5560 Database project!
 
-## Um... how do I run this?
+## How do I run this?
 
 - Start by updating the crendentials in `config.txt`
-- You _should_ then be able to run `database.py` and get a final result
+- Download the sample data files from the Data Download section
+- Ensure the dependencies in the Dependencies section are installed
+- You _should_ then be able to run `database.py` and get your data loaded correctly
+- After that, run `app.py` and enjoy!
 
 ## Data Download
 
@@ -32,7 +35,7 @@ Welcome to our CSCI 4560/5560 Database project!
 
 * `sqlalchemy`
 * The official MySQL Python adapter
-* Download `coop.csv`, `asos.csv` and `asosMetadata.csv` as described below.
+<!--* Download `coop.csv`, `asos.csv` and `asosMetadata.csv` as described below.-->
 * `Flask`
 * `pandas`
 
@@ -53,12 +56,6 @@ Flask examples:
 * <https://picocss.com/>
 
 
-
-## TODO
-
-* Need to incorporate COOP and ASOS data together on elevation query -> probably going to use `UNION ALL`
-* Want to be able to incorporate more weather variables on the elevation query page -> just need to add some logic in the SQL query
-* Let's add a page that just displays all of the available columns in each of the tables
 
 ## Data Sources
 
@@ -98,10 +95,10 @@ So, our data for ASOS actually includes all of the metadata all ready, which is 
 
 Nobody's got time for that... 🙄
 
-For these, be sure to download these 2 files first... (Python doesn't like reading files that *big* over the internet...) Save them as `asos.csv` and `asosMetadata.csv`. 
+<!-- For these, be sure to download these 2 files first... (Python doesn't like reading files that *big* over the internet...) Save them as `asos.csv` and `asosMetadata.csv`. 
 
-Probably going to be `pd.read_csv` for this one <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html>
-
+Probably going to be `pd.read_csv` for this one <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html>-->
+<!--
 ## Data Limits
 
 Not sure what dates we want to use yet? 
@@ -123,7 +120,7 @@ Once we get our data, we can insert it into our tables too.
 
 * <https://docs.sqlalchemy.org/en/20/core/engines.html>
 * <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_sql.html>
-
+-->
 ## Thank you, Iowa State!
 
 ```
